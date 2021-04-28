@@ -1,0 +1,17 @@
+[remap]
+
+importer="texture_atlas"
+type="Texture"
+path="res://.import/ufoGreen.png-316907d671760e86ed09bd58f016e115.res"
+group_file="res://Art/.png"
+valid=true
+[deps]
+
+
+source_file="res://Assets/PNG/ufoGreen.png"
+dest_files=[ "res://.import/ufoGreen.png-316907d671760e86ed09bd58f016e115.res" ]
+
+[params]
+
+atlas_file="res://Art/.png"
+import_mode=1

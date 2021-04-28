@@ -1,0 +1,17 @@
+[remap]
+
+importer="texture_atlas"
+type="Texture"
+path="res://.import/ufoRed.png-dbcd79660e882677b0b5fff59fde89dc.res"
+group_file="res://Art/.png"
+valid=true
+[deps]
+
+
+source_file="res://Assets/PNG/ufoRed.png"
+dest_files=[ "res://.import/ufoRed.png-dbcd79660e882677b0b5fff59fde89dc.res" ]
+
+[params]
+
+atlas_file="res://Art/.png"
+import_mode=1

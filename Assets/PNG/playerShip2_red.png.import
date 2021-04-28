@@ -1,0 +1,17 @@
+[remap]
+
+importer="texture_atlas"
+type="Texture"
+path="res://.import/playerShip2_red.png-f721383fd30912769779eabd21ef2ad7.res"
+group_file="res://Art/.png"
+valid=true
+[deps]
+
+
+source_file="res://Assets/PNG/playerShip2_red.png"
+dest_files=[ "res://.import/playerShip2_red.png-f721383fd30912769779eabd21ef2ad7.res" ]
+
+[params]
+
+atlas_file="res://Art/.png"
+import_mode=1

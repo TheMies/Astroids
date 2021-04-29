@@ -22,6 +22,7 @@ public class Player : Area2D
     private float rot = 0;
     private Vector2 pos = new Vector2();
     private Node bulletContainer;
+    private Timer gunTimer;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -30,6 +31,7 @@ public class Player : Area2D
         pos = _screenSize/2;
         SetProcess(true);
         bulletContainer = GetNode("BulletContainer");
+        gunTimer = GetNode<Timer>("GunTimer");
     }
 
     public override void _Process(float delta)
@@ -48,7 +50,9 @@ public class Player : Area2D
             _acceleration = new Vector2(0,0);
         }
         if(Input.IsActionPressed("player_shoot")){
-            Shoot();
+            if (gunTimer.TimeLeft == 0){
+                Shoot();
+            }
         }
         
         _acceleration += _velocity * - _friction;
@@ -73,6 +77,7 @@ public class Player : Area2D
     }
 
     private void Shoot(){
+        gunTimer.Start();
         var b = bullet.Instance() as PlayerBullet;
         bulletContainer.AddChild(b);
         b.StartAt(Rotation, GetNode<Position2D>("Muzzle").GlobalPosition);

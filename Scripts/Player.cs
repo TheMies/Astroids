@@ -12,6 +12,8 @@ public class Player : Area2D
     [Export(PropertyHint.None, "Max velocity")]
     private float _maxVelocity = 400f;
 
+    [Export(PropertyHint.None, "Bullet")]
+    private PackedScene bullet;
     [Export(PropertyHint.None, "Friction")]
     private float _friction = 0.65f;
     private Vector2 _screenSize = new Vector2();
@@ -19,6 +21,7 @@ public class Player : Area2D
     private Vector2 _acceleration = new Vector2();
     private float rot = 0;
     private Vector2 pos = new Vector2();
+    private Node bulletContainer;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -26,6 +29,7 @@ public class Player : Area2D
         _screenSize = GetViewport().Size;
         pos = _screenSize/2;
         SetProcess(true);
+        bulletContainer = GetNode("BulletContainer");
     }
 
     public override void _Process(float delta)
@@ -43,7 +47,9 @@ public class Player : Area2D
         else{
             _acceleration = new Vector2(0,0);
         }
-        if(Input.IsActionPressed("player_shoot")){}
+        if(Input.IsActionPressed("player_shoot")){
+            Shoot();
+        }
         
         _acceleration += _velocity * - _friction;
         _velocity += _acceleration * delta;
@@ -66,15 +72,9 @@ public class Player : Area2D
         Rotation = rot + (float)(Math.PI / 2); // Since ship sprite was pointing up, fix with extra rotation of PI/2;
     }
 
-    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-    //  public override void _Process(float delta)
-    //  {
-    //      
-    
-
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+    private void Shoot(){
+        var b = bullet.Instance() as PlayerBullet;
+        bulletContainer.AddChild(b);
+        b.StartAt(Rotation, GetNode<Position2D>("Muzzle").GlobalPosition);
+    }
 }

@@ -34,3 +34,5 @@ position = Vector2( 551.48, 537.148 )
 
 [node name="8" type="Position2D" parent="SpawnLocations"]
 position = Vector2( 976.325, 548.802 )
+
+[node name="AstroidContainer" type="Node" parent="."]

@@ -76,6 +76,8 @@ public class Player : Area2D
         Rotation = rot + (float)(Math.PI / 2); // Since ship sprite was pointing up, fix with extra rotation of PI/2;
     }
 
+    public void OnGunTimer(){}
+
     private void Shoot(){
         gunTimer.Start();
         var b = bullet.Instance() as PlayerBullet;

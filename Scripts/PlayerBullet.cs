@@ -15,6 +15,13 @@ public class PlayerBullet : Area2D
         
     }
 
+    private void OnPlayerBulletBodyEntered(Node body){
+        if (body.GetGroups().Contains("astroids")){
+            body.Call("Explode", velocity.Normalized());
+            QueueFree();
+        }
+    }
+
     public void StartAt(float dir, Vector2 pos){
         Rotation = dir;
         Position = pos;

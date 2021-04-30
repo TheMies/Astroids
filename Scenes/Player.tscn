@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Art/sheet.playerShip2_orange.atlastex" type="Texture" id=1]
 [ext_resource path="res://Scripts/Player.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/PlayerBullet.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Assets/Bonus/laser2.wav" type="AudioStream" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 26.937
@@ -27,5 +28,9 @@ position = Vector2( 0, -50 )
 [node name="GunTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="Laser1" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = -32.165
 
 [connection signal="timeout" from="GunTimer" to="." method="OnGunTimer"]

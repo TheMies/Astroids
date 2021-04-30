@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/shield_up.wav-70c8ca738305fc8ae859dbe4869ff980.sample"
+
+[deps]
+
+source_file="res://Assets/Bonus/shield_up.wav"
+dest_files=[ "res://.import/shield_up.wav-70c8ca738305fc8ae859dbe4869ff980.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

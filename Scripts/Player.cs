@@ -22,6 +22,7 @@ public class Player : Area2D
     private float rot = 0;
     private Vector2 pos = new Vector2();
     private Node bulletContainer;
+    private AudioStreamPlayer laser01;
     private Timer gunTimer;
 
     // Called when the node enters the scene tree for the first time.
@@ -31,6 +32,7 @@ public class Player : Area2D
         pos = _screenSize/2;
         SetProcess(true);
         bulletContainer = GetNode("BulletContainer");
+        laser01 = GetNode<AudioStreamPlayer>("Laser1");
         gunTimer = GetNode<Timer>("GunTimer");
     }
 
@@ -79,6 +81,7 @@ public class Player : Area2D
     public void OnGunTimer(){}
 
     private void Shoot(){
+        laser01.Play();
         gunTimer.Start();
         var b = bullet.Instance() as PlayerBullet;
         bulletContainer.AddChild(b);

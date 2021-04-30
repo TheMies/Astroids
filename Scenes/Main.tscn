@@ -1,10 +1,17 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Main.cs" type="Script" id=2]
+[ext_resource path="res://Art/startfield03.jpg" type="Texture" id=3]
+[ext_resource path="res://Assets/Bonus/enemy_explode.wav" type="AudioStream" id=4]
 
 [node name="Main" type="Node"]
 script = ExtResource( 2 )
+
+[node name="Background" type="Sprite" parent="."]
+position = Vector2( 516.896, 312.189 )
+scale = Vector2( 0.815489, 0.877799 )
+texture = ExtResource( 3 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 545.123, 306.185 )
@@ -36,3 +43,7 @@ position = Vector2( 551.48, 537.148 )
 position = Vector2( 976.325, 548.802 )
 
 [node name="AstroidContainer" type="Node" parent="."]
+
+[node name="Explosion1" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = -27.336

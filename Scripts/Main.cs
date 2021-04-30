@@ -5,9 +5,13 @@ public class Main : Node
 {
 	private GC.Dictionary<string, string> BreakPattern = new GC.Dictionary<string, string>();
  	private PackedScene astroidScene = GD.Load("res://Scenes/Astroid.tscn") as PackedScene;
+ 	private PackedScene explosionScene = GD.Load("res://Scenes/Explosion.tscn") as PackedScene;
 	private Node astroidContainer;
+    private AudioStreamPlayer explosion1;
+
 	public override void _Ready()
 	{
+        explosion1 = GetNode<AudioStreamPlayer>("Explosion1");
 		BreakPattern.Add("big", "med");
 		BreakPattern.Add("med", "small");
 		BreakPattern.Add("small", "tiny");
@@ -48,6 +52,7 @@ public class Main : Node
 	}
 
 	private void OnExplode(string size, Vector2 pos, Vector2 vel, Vector2 hitVel){
+		explosion1.Play();
 		var newSize = BreakPattern[size];
 		if (newSize == null){return;}
 		//for var offset 
@@ -57,5 +62,10 @@ public class Main : Node
 		var newVel2 = vel + hitVel.Tangent() * -1;
 		SpawnAstroid(newSize, newPos1, newVel1);
 		SpawnAstroid(newSize, newPos2, newVel2);
+
+		var expl = explosionScene.Instance() as AnimatedSprite;
+		AddChild(expl);
+		expl.Position = pos;
+		expl.Play();
 	}
 }

@@ -19,7 +19,7 @@ public class Astroid : KinematicBody2D
     private Vector2 Extends;
 
     private Particles2D Puff;
-    private string size = "";
+    public string Size = "";
 
     private string ArtPath = "res://art/";
     private GC.Dictionary<string, GC.Array<string>> Textures = new GC.Dictionary<string, GC.Array<string>>();
@@ -55,7 +55,7 @@ public class Astroid : KinematicBody2D
     }
 
     public void Init(string initialSize, Vector2 initialPosition, Vector2 initialVelocity){
-        size = initialSize;
+        Size = initialSize;
         if (initialVelocity.Length() > 0){
             Vel = initialVelocity;
         }
@@ -81,7 +81,7 @@ public class Astroid : KinematicBody2D
     }
 
     public void Explode(Vector2 hitVelocity){
-        OnExplode?.Invoke(size, Position, Vel, hitVelocity);
+        OnExplode?.Invoke(Size, Position, Vel, hitVelocity);
         QueueFree();
     }
 

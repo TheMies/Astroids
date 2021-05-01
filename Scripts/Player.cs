@@ -3,6 +3,10 @@ using System;
 
 public class Player : Area2D
 {
+    [Export]
+    public double ShieldLevel = 0;
+    private bool ShieldUp = true;
+
     [Export(PropertyHint.None, "Rotation speed")]
     private float _rotationSpeed = 2.6f;
 
@@ -24,21 +28,32 @@ public class Player : Area2D
     private Node bulletContainer;
     private AudioStreamPlayer laser01;
     private Timer gunTimer;
+    private Global Global;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        Global = GetNode<Global>("/root/Global");
         _screenSize = GetViewport().Size;
         pos = _screenSize/2;
         SetProcess(true);
         bulletContainer = GetNode("BulletContainer");
         laser01 = GetNode<AudioStreamPlayer>("Laser1");
         gunTimer = GetNode<Timer>("GunTimer");
+        ShieldLevel = Global.ShieldMax;
     }
 
     public override void _Process(float delta)
     {
-        //base._Process(delta);
+        if (ShieldUp){
+            ShieldLevel = Math.Min(ShieldLevel + Global.ShieldRegen * delta, 100);
+        }
+        if (ShieldLevel <= 0){
+            ShieldUp = false;
+            ShieldLevel = 0;
+            GetNode<Sprite>("Shield").Hide();
+        }
+
         if(Input.IsActionPressed("player_left")){
             rot -= (_rotationSpeed * delta);
         }
@@ -46,10 +61,12 @@ public class Player : Area2D
             rot += (_rotationSpeed * delta);
         }
         if(Input.IsActionPressed("player_thrust")){
+            GetNode<AnimatedSprite>("Exhaust").Show();
             _acceleration = new Vector2(_thrust, 0).Rotated(rot);
         }
         else{
             _acceleration = new Vector2(0,0);
+            GetNode<AnimatedSprite>("Exhaust").Hide();
         }
         if(Input.IsActionPressed("player_shoot")){
             if (gunTimer.TimeLeft == 0){
@@ -86,5 +103,19 @@ public class Player : Area2D
         var b = bullet.Instance() as PlayerBullet;
         bulletContainer.AddChild(b);
         b.StartAt(Rotation, GetNode<Position2D>("Muzzle").GlobalPosition);
+    }
+
+    public void OnPlayerBodyEntered(Node body){
+        if (body.GetGroups().Contains("astroids")){
+            var a = body as Astroid;
+            if (ShieldUp){
+                a.Explode(_velocity);
+                ShieldLevel -= Global.AstroidDamage[a.Size];
+            }
+            else{
+                Global.GameOver = true;
+            }
+        }
+        GD.Print(ShieldLevel);
     }
 }

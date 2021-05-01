@@ -1,38 +1,45 @@
 using Godot;
-using GC = Godot.Collections;
 
 public class Main : Node
 {
-	private GC.Dictionary<string, string> BreakPattern = new GC.Dictionary<string, string>();
  	private PackedScene astroidScene = GD.Load("res://Scenes/Astroid.tscn") as PackedScene;
  	private PackedScene explosionScene = GD.Load("res://Scenes/Explosion.tscn") as PackedScene;
 	private Node astroidContainer;
     private AudioStreamPlayer explosion1;
+	private Global Global;
 
 	public override void _Ready()
 	{
+		Global = GetNode<Global>("/root/Global");
         explosion1 = GetNode<AudioStreamPlayer>("Explosion1");
-		BreakPattern.Add("big", "med");
-		BreakPattern.Add("med", "small");
-		BreakPattern.Add("small", "tiny");
-		BreakPattern.Add("tiny", null);
-
-		// Spawn some astroids
-		SpawnAstroids(1);
-		// var spawns = GetNode<Node>("SpawnLocations");
-		// for (int i =0; i < 1; i++){
-		// 	var spawn = spawns.GetChild(i) as Position2D;
-		// 	SpawnAstroid("big", spawn.Position, Vector2.Zero);
-		// }
 	}
 
     public override void _Process(float delta)
     {
+		ShowHudData();
+
         base._Process(delta);
-		if (astroidContainer != null && astroidContainer.GetChildCount() == 0){
-			SpawnAstroids(2);
+		if (astroidContainer == null || astroidContainer.GetChildCount() == 0){
+			Global.Level += 1;
+			SpawnAstroids(Global.Level);
 		}
     }
+
+	private void ShowHudData(){
+		var HUD = GetNode<CanvasLayer>("HUD");
+		var player = GetNode<Player>("Player");
+		var color = "green";
+		if (player.ShieldLevel < 40){
+			color = "red";
+		}
+		else if (player.ShieldLevel < 70){
+			color = "yellow";
+		}
+		var texture = ResourceLoader.Load<Texture>($"res://Art/gui/barHorizontal_{color}_mid 200.png");
+		HUD.GetNode<TextureProgress>("Shield").TextureProgress_ = texture;
+		HUD.CallDeferred("Shield", player.ShieldLevel);
+		HUD.CallDeferred("Score", Global.Score);
+	}
 
 	private void SpawnAstroids(int number){
 		var spawns = GetNode<Node>("SpawnLocations");
@@ -53,8 +60,13 @@ public class Main : Node
 
 	private void OnExplode(string size, Vector2 pos, Vector2 vel, Vector2 hitVel){
 		explosion1.Play();
-		var newSize = BreakPattern[size];
-		if (newSize == null){return;}
+		Global.Score += Global.AstroidPoints[size];
+		var newSize = GetNode<Global>("/root/Global").BreakPattern[size];
+		if (newSize == null){
+			ShowExplosion(false, pos);
+			return;
+		}
+		
 		//for var offset 
 		var newPos1 = pos + hitVel.Tangent().Clamped(25) * 1;
 		var newPos2 = pos + hitVel.Tangent().Clamped(25) * -1;
@@ -63,7 +75,17 @@ public class Main : Node
 		SpawnAstroid(newSize, newPos1, newVel1);
 		SpawnAstroid(newSize, newPos2, newVel2);
 
-		var expl = explosionScene.Instance() as AnimatedSprite;
+		ShowExplosion(true, pos);
+	}
+
+	private void ShowExplosion(bool big, Vector2 pos){
+		var	expl = explosionScene.Instance() as AnimatedSprite;
+		if (big){
+			expl.Animation = "regular";
+		}
+		else{
+			expl.Animation = "small";
+		}
 		AddChild(expl);
 		expl.Position = pos;
 		expl.Play();

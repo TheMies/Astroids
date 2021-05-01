@@ -9,18 +9,8 @@ public class HUD : CanvasLayer
     {
         LabelNode = GetNode<Label>("Score");
         ShieldNode = GetNode<TextureProgress>("Shield");
+        Global = GetNode<Global>("/root/Global");
     }
-
-    // public double Shield {get{
-    //     return ShieldNode.Value;
-    // }set{
-    //     ShieldNode.Value = value;
-    // }}
-    // public int Score {get{
-    //     return int.Parse(LabelNode.Text);
-    // }set{
-    //     LabelNode.Text = value.ToString();
-    // }}
 
     public void Shield(double value){
         ShieldNode.Value = value;
@@ -28,10 +18,30 @@ public class HUD : CanvasLayer
     public void Score(int value){
         LabelNode.Text = value.ToString();
     }
+
+    private Global Global;
     
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+	private void Update(Player player){
+		var color = "green";
+		if (player.ShieldLevel < 40){
+			color = "red";
+		}
+		else if (player.ShieldLevel < 70){
+			color = "yellow";
+		}
+		var texture = ResourceLoader.Load<Texture>($"res://Art/gui/barHorizontal_{color}_mid 200.png");
+		ShieldNode.TextureProgress_ = texture;
+        ShieldNode.Value = player.ShieldLevel;
+        LabelNode.Text = Global.Score.ToString();
+	}
+   
+   public void ShowMessage(string text){
+       GetNode<Label>("Message").Text = text;
+       GetNode<Label>("Message").Show();
+       GetNode<Timer>("MessageTimer").Start();
+   }
+    public void OnMessageTimerTimeout(){
+        GetNode<Label>("Message").Hide();
+    }
+
 }

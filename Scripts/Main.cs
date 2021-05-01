@@ -12,35 +12,24 @@ public class Main : Node
 	{
 		Global = GetNode<Global>("/root/Global");
         explosion1 = GetNode<AudioStreamPlayer>("Explosion1");
+		BeginNextLevel();
+	}
+
+	public void BeginNextLevel(){
+		Global.Level += 1;
+		GetNode<HUD>("HUD").ShowMessage($"Wave {Global.Level}");
+		SpawnAstroids(Global.Level);
 	}
 
     public override void _Process(float delta)
     {
-		ShowHudData();
-
+		var HUD = GetNode<CanvasLayer>("HUD");
+		HUD.CallDeferred("Update", GetNode<Player>("Player"));
         base._Process(delta);
 		if (astroidContainer == null || astroidContainer.GetChildCount() == 0){
-			Global.Level += 1;
-			SpawnAstroids(Global.Level);
+			BeginNextLevel();
 		}
     }
-
-	private void ShowHudData(){
-		var HUD = GetNode<CanvasLayer>("HUD");
-		var player = GetNode<Player>("Player");
-		var color = "green";
-		if (player.ShieldLevel < 40){
-			color = "red";
-		}
-		else if (player.ShieldLevel < 70){
-			color = "yellow";
-		}
-		var texture = ResourceLoader.Load<Texture>($"res://Art/gui/barHorizontal_{color}_mid 200.png");
-		HUD.GetNode<TextureProgress>("Shield").TextureProgress_ = texture;
-		HUD.CallDeferred("Shield", player.ShieldLevel);
-		HUD.CallDeferred("Score", Global.Score);
-	}
-
 	private void SpawnAstroids(int number){
 		var spawns = GetNode<Node>("SpawnLocations");
 		for (int i =0; i < number; i++){
@@ -74,7 +63,6 @@ public class Main : Node
 		var newVel2 = vel + hitVel.Tangent() * -1;
 		SpawnAstroid(newSize, newPos1, newVel1);
 		SpawnAstroid(newSize, newPos2, newVel2);
-
 		ShowExplosion(true, pos);
 	}
 

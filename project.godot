@@ -20,7 +20,7 @@ Global="*res://Scripts/Global.cs"
 
 [display]
 
-window/size/resizable=false
+window/stretch/mode="viewport"
 
 [editor_plugins]
 

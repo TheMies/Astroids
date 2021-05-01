@@ -116,6 +116,5 @@ public class Player : Area2D
                 Global.GameOver = true;
             }
         }
-        GD.Print(ShieldLevel);
     }
 }

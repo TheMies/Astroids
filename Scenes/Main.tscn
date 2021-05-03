@@ -13,7 +13,8 @@ script = ExtResource( 2 )
 [node name="HUD" parent="." instance=ExtResource( 6 )]
 
 [node name="Background" type="Sprite" parent="."]
-position = Vector2( 516.896, 312.189 )
+pause_mode = 1
+position = Vector2( 517.603, 310.775 )
 scale = Vector2( 0.815489, 0.877799 )
 texture = ExtResource( 3 )
 
@@ -58,3 +59,9 @@ stream = ExtResource( 5 )
 volume_db = -30.358
 max_distance = 2051.0
 attenuation = 1.91901
+
+[node name="RestartTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[connection signal="timeout" from="RestartTimer" to="." method="OnRestartTimerTimeout"]

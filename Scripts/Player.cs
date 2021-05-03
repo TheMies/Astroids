@@ -3,6 +3,10 @@ using System;
 
 public class Player : Area2D
 {
+    [Signal]
+    public delegate void ExpodeHandler();
+    public event ExpodeHandler OnExplode;
+
     [Export]
     public double ShieldLevel = 0;
     private bool ShieldUp = true;
@@ -33,6 +37,10 @@ public class Player : Area2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        Show();
+        SetProcess(true);
+        Monitoring = true;
+
         Global = GetNode<Global>("/root/Global");
         _screenSize = GetViewport().Size;
         pos = _screenSize/2;
@@ -41,6 +49,12 @@ public class Player : Area2D
         laser01 = GetNode<AudioStreamPlayer>("Laser1");
         gunTimer = GetNode<Timer>("GunTimer");
         ShieldLevel = Global.ShieldMax;
+    }
+
+    public void Disable(){
+        Hide();
+        SetProcess(false);
+        Monitoring = false;
     }
 
     public override void _Process(float delta)
@@ -113,7 +127,7 @@ public class Player : Area2D
                 ShieldLevel -= Global.AstroidDamage[a.Size];
             }
             else{
-                Global.GameOver = true;
+                OnExplode?.Invoke();
             }
         }
     }

@@ -42,6 +42,24 @@ public class HUD : CanvasLayer
    }
     public void OnMessageTimerTimeout(){
         GetNode<Label>("Message").Hide();
+        GetNode<Label>("Message").Text = string.Empty;
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        base._Input(@event);
+        if (@event.IsActionPressed("pause_toggle")){
+            Global.IsPaused = !Global.IsPaused;
+            GetTree().Paused = Global.IsPaused;
+            if (Global.IsPaused){ 
+                GetNode<Panel>("PausePopup").Show();
+                GetNode<Label>("Message").Hide();
+            }
+            else{
+                GetNode<Panel>("PausePopup").Hide();
+                GetNode<Label>("Message").Show();
+            }
+        }
     }
 
 }

@@ -12,7 +12,23 @@ public class Main : Node
 	{
 		Global = GetNode<Global>("/root/Global");
         explosion1 = GetNode<AudioStreamPlayer>("Explosion1");
+		GetNode<Player>("Player").OnExplode += OnExplodePlayer;
 		BeginNextLevel();
+	}
+
+	private void OnExplodePlayer(){
+		var player = GetNode<Player>("Player");
+		player.CallDeferred("Disable");
+		explosion1.Play();
+		var	expl = explosionScene.Instance() as AnimatedSprite;
+		expl.Animation = "sonic";
+		expl.Scale = new Vector2(1.8f, 1.8f);
+		AddChild(expl);
+		expl.Position = player.Position;
+		expl.Play();
+		Global.GameOver = true;
+		GetNode<HUD>("HUD").ShowMessage($"Game over!");
+		GetNode<Timer>("RestartTimer").Start();
 	}
 
 	public void BeginNextLevel(){
@@ -52,7 +68,7 @@ public class Main : Node
 		Global.Score += Global.AstroidPoints[size];
 		var newSize = GetNode<Global>("/root/Global").BreakPattern[size];
 		if (newSize == null){
-			ShowExplosion(false, pos);
+			ShowExplosion(size, pos);
 			return;
 		}
 		
@@ -63,19 +79,32 @@ public class Main : Node
 		var newVel2 = vel + hitVel.Tangent() * -1;
 		SpawnAstroid(newSize, newPos1, newVel1);
 		SpawnAstroid(newSize, newPos2, newVel2);
-		ShowExplosion(true, pos);
+		ShowExplosion(size, pos);
 	}
 
-	private void ShowExplosion(bool big, Vector2 pos){
+	
+
+	private void ShowExplosion(string size, Vector2 pos){
 		var	expl = explosionScene.Instance() as AnimatedSprite;
-		if (big){
+		if (size == "big"){
+			expl.Animation = "sonic";
+		}
+		else if (size == "med"){
 			expl.Animation = "regular";
 		}
-		else{
+		else if (size == "small"){
 			expl.Animation = "small";
+		}
+		else if (size == "tiny"){
+			expl.Animation = "small";
+			expl.Scale = new Vector2(0.5f, 0.5f);
 		}
 		AddChild(expl);
 		expl.Position = pos;
 		expl.Play();
+	}
+
+	private void OnRestartTimerTimeout(){
+		Global.NewGame();
 	}
 }

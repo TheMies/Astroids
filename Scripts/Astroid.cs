@@ -9,6 +9,9 @@ public class Astroid : KinematicBody2D
     public delegate void ExpodeHandler(string size, Vector2 pos, Vector2 vel, Vector2 hitVelocity);
     public event ExpodeHandler OnExplode;
 
+
+
+
     [Export]
     private float MaxSpeed = 300f;
     [Export]

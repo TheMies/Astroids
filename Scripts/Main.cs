@@ -4,14 +4,19 @@ public class Main : Node
 {
  	private PackedScene astroidScene = GD.Load("res://Scenes/Astroid.tscn") as PackedScene;
  	private PackedScene explosionScene = GD.Load("res://Scenes/Explosion.tscn") as PackedScene;
+ 	private PackedScene enemyScene = GD.Load("res://Scenes/Enemy.tscn") as PackedScene;
 	private Node astroidContainer;
     private AudioStreamPlayer explosion1;
 	private Global Global;
+	private Timer EnemyTimer;
+	private RandomNumberGenerator rnd = new RandomNumberGenerator();
 
 	public override void _Ready()
 	{
+		rnd.Randomize();
 		Global = GetNode<Global>("/root/Global");
         explosion1 = GetNode<AudioStreamPlayer>("Explosion1");
+		EnemyTimer = GetNode<Timer>("EnemyTimer");
 		GetNode<Player>("Player").OnExplode += OnExplodePlayer;
 		BeginNextLevel();
 	}
@@ -33,6 +38,9 @@ public class Main : Node
 
 	public void BeginNextLevel(){
 		Global.Level += 1;
+		EnemyTimer.Stop();
+		EnemyTimer.WaitTime = rnd.RandiRange(5, 10);
+		EnemyTimer.Start();
 		GetNode<HUD>("HUD").ShowMessage($"Wave {Global.Level}");
 		SpawnAstroids(Global.Level);
 	}
@@ -106,5 +114,13 @@ public class Main : Node
 
 	private void OnRestartTimerTimeout(){
 		Global.NewGame();
+	}
+
+	private void OnEnemyTimerTimeout(){
+		var e = enemyScene.Instance<Enemy>();
+		AddChild(e);
+		e.target = GetNode<Player>("Player");
+		EnemyTimer.WaitTime = rnd.RandiRange(20, 40);
+		EnemyTimer.Start();
 	}
 }

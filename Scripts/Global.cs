@@ -13,8 +13,8 @@ public class Global : Node{
     public Node NewScene;
 
     // Player settings
-    public double ShieldMax = 10;
-    public double ShieldRegen = 1;
+    public double ShieldMax = 100;
+    public double ShieldRegen = 2;
     
     
     // Astroid settings

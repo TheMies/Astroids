@@ -111,6 +111,16 @@ public class Player : Area2D
 
     public void OnGunTimer(){}
 
+    public void Damage(double amount){
+        if (ShieldUp){
+            ShieldLevel -= amount;
+        }
+        else{
+            Disable();
+             OnExplode?.Invoke();
+        }
+    }
+
     private void Shoot(){
         laser01.Play();
         gunTimer.Start();
@@ -124,10 +134,7 @@ public class Player : Area2D
             var a = body as Astroid;
             if (ShieldUp){
                 a.Explode(_velocity);
-                ShieldLevel -= Global.AstroidDamage[a.Size];
-            }
-            else{
-                OnExplode?.Invoke();
+                Damage(Global.AstroidDamage[a.Size]);
             }
         }
     }

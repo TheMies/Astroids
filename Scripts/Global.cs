@@ -15,7 +15,13 @@ public class Global : Node{
     // Player settings
     public double ShieldMax = 100;
     public double ShieldRegen = 2;
+    public double PlayerBulletDamage = 25;
     
+    // Enemy settings
+    public double EnemyBulletDamage = 25;
+    public double EnemyHealth = 30;
+    public int EnemyPoints = 100;
+
     
     // Astroid settings
     public GC.Dictionary<string, string> BreakPattern = new GC.Dictionary<string, string>{

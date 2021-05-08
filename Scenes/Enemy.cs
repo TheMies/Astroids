@@ -12,9 +12,14 @@ public class Enemy : Area2D
     private Node2D remote;
     private int speed = 150;
     public Node2D target;
+    public double Health;
+    private Global Global;
 
     public override void _Ready()
     {
+        AddToGroup("Enemies");
+        Global = GetNode<Global>("/root/Global");
+        Health = Global.EnemyHealth;
         bulletContainer = GetNode<Node>("BulletContainer");
         shootTimer = GetNode<Timer>("ShootTimer");
         paths = GetNode<Node>("EnemyPaths");
@@ -26,7 +31,7 @@ public class Enemy : Area2D
         path.AddChild(follow);
         remote = new Node2D();
         follow.AddChild(remote);
-        shootTimer.WaitTime = 1.5f;
+        shootTimer.WaitTime = 3f;
         shootTimer.Start();
     }
 
@@ -59,6 +64,15 @@ public class Enemy : Area2D
             var b = bulletScene.Instance<EnemyBullet>();
             bulletContainer.AddChild(b);
             b.StartAt(dir.Angle() - (float)Math.PI/2 + (i * 0.1f) , GlobalPosition);
+        }
+    }
+
+     public void Damage(double amount){
+        Health -= amount;
+
+        if (Health <= 0){
+            Global.Score += Global.EnemyPoints;
+            QueueFree();
         }
     }
 }

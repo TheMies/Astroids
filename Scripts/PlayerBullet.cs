@@ -8,17 +8,23 @@ public class PlayerBullet : Area2D
     
     [Export]
     private float speed = 1000;
-
-
+    private Global Global;
     public override void _Ready()
     {
-        
+        Global = GetNode<Global>("/root/Global");
     }
 
     private void OnPlayerBulletBodyEntered(Node body){
         if (body.GetGroups().Contains("astroids")){
             body.Call("Explode", velocity.Normalized());
             QueueFree();
+        }
+    }
+
+    private void OnPlayerBulletAreaAntered(Area2D area2D){
+        if (area2D.GetGroups().Contains("Enemies")){
+            QueueFree();
+            area2D.CallDeferred("Damage", Global.PlayerBulletDamage);
         }
     }
 

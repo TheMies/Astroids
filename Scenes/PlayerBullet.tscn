@@ -19,5 +19,6 @@ shape = SubResource( 1 )
 [node name="Lifetime" type="Timer" parent="."]
 autostart = true
 
+[connection signal="area_entered" from="." to="." method="OnPlayerBulletAreaAntered"]
 [connection signal="body_entered" from="." to="." method="OnPlayerBulletBodyEntered"]
 [connection signal="timeout" from="Lifetime" to="." method="OnLifetime"]
